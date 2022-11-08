@@ -1,55 +1,24 @@
-import './style.css';
-import books from './books';
+import "./style.css";
+import books from "./books";
+import { getNewVerse, type Verse } from "./verse";
 
-interface Verse {
-  book_id: string;
-  book_name: string;
-  chapter: number;
-  verse: number;
-  text: string;
-}
+const displayHeadingEl = document.getElementById("display-heading");
+const displayParEl = document.getElementById("display-par");
 
-interface VerseApiResponse {
-  reference: string;
-  verses: Verse[];
-  text: string;
-  translation_id: string;
-  translation_name: string;
-  translation_note: string;
-}
-
-const BIBLE_API_URL = 'https://bible-api.com/';
-
-const displayHeadingEl = document.getElementById('display-heading');
-const displayParEl = document.getElementById('display-par');
-
-const inputEl = document.getElementById('input') as HTMLInputElement;
+const inputEl = document.getElementById("input") as HTMLInputElement;
 // inputEl.addEventListener('input', handleInput);
-inputEl.addEventListener('keyup', handleInput);
+inputEl.addEventListener("keyup", handleInput);
 
-const prevButton = document.getElementById('prev-button');
-prevButton.addEventListener('click', setPrevVerse);
+const prevButton = document.getElementById("prev-button");
+prevButton.addEventListener("click", setPrevVerse);
 
-const nextButton = document.getElementById('next-button');
-nextButton.addEventListener('click', setNextVerse);
+const nextButton = document.getElementById("next-button");
+nextButton.addEventListener("click", setNextVerse);
 
 let sessionVerses: Verse[] = [];
 let sessionResults = [];
 let startTime = 0;
 let endTime = 0;
-
-async function getNewVerse(
-  bookName: string,
-  chapterNumber: number,
-  verseNumber: number
-) {
-  const bookNameClean = bookName.replace(/\s/g, '');
-  const query = `${BIBLE_API_URL}${bookNameClean}${chapterNumber}:${verseNumber}`;
-  const response = await fetch(query);
-  const data: VerseApiResponse = await response.json();
-  const verse: Verse = data.verses[0];
-  return verse;
-}
 
 function setVerse(verse: Verse) {
   refreshElements();
@@ -61,8 +30,8 @@ function setVerse(verse: Verse) {
 }
 
 function refreshElements() {
-  displayParEl.innerHTML = '';
-  inputEl.value = '';
+  displayParEl.innerHTML = "";
+  inputEl.value = "";
 }
 
 async function setNextVerse() {
@@ -79,17 +48,17 @@ async function setNextVerse() {
       currentVerseNumber + 1
     );
   } catch (e) {
-    console.log('no verse found, trying next chapter');
+    console.log("no verse found, trying next chapter");
     try {
       verse = await getNewVerse(currentBook, currentChapter + 1, 1);
     } catch (e) {
-      console.log('no verse found, trying next book');
+      console.log("no verse found, trying next book");
       try {
         const bookIndex = books.indexOf(currentBook) + 1;
         const book = books[bookIndex];
         verse = await getNewVerse(book, 1, 1);
       } catch (e) {
-        console.log('no verse found');
+        console.log("no verse found");
       }
     }
   }
@@ -103,7 +72,7 @@ async function setPrevVerse() {
     sessionVerses.pop();
     setVerse(sessionVerses[sessionVerses.length - 1]);
   } else {
-    alert('No previous verse in the current session.');
+    alert("No previous verse in the current session.");
   }
 }
 
@@ -111,8 +80,8 @@ function containerize(input: String): HTMLSpanElement[] {
   let spans = [];
   let count = 0;
   for (let c of input) {
-    let newEl = document.createElement('span');
-    newEl.setAttribute('id', `c-${count}`);
+    let newEl = document.createElement("span");
+    newEl.setAttribute("id", `c-${count}`);
     newEl.innerText = c;
     spans.push(newEl);
     count++;
@@ -128,24 +97,24 @@ function handleInput() {
     const spanEl = document.getElementById(`c-${i}`);
     if (i < text.length && text.length <= currentVerseText.length) {
       if (text[i] === currentVerseText[i]) {
-        spanEl.setAttribute('class', 'correct');
+        spanEl.setAttribute("class", "correct");
       } else {
-        spanEl.setAttribute('class', 'wrong');
+        spanEl.setAttribute("class", "wrong");
       }
     } else {
-      spanEl.setAttribute('class', '');
+      spanEl.setAttribute("class", "");
     }
   }
 
   if (text.length === 1) {
     // start timer
-    console.log('START');
+    console.log("START");
     startTime = new Date().getTime();
     console.log(startTime);
   }
   if (text == currentVerseText) {
     // stop timer
-    console.log('FINISH');
+    console.log("FINISH");
     endTime = new Date().getTime();
     console.log(endTime);
 
@@ -156,14 +125,14 @@ function handleInput() {
     const minutes = (endTime - startTime) / 1000 / 60;
     const wpm = Math.round(words / minutes);
     const res = ` ${wpm} wpm`;
-    document.getElementById('results-latest').innerText = ` ${wpm} wpm`;
-    document.getElementById('results-prev').innerText = `${sessionResults}`;
+    document.getElementById("results-latest").innerText = ` ${wpm} wpm`;
+    document.getElementById("results-prev").innerText = `${sessionResults}`;
     sessionResults.push(res);
   }
 }
 
 async function main() {
-  const initialVerse = await getNewVerse('Genesis', 1, 1);
+  const initialVerse = await getNewVerse("Genesis", 1, 1);
   sessionVerses.push(initialVerse);
   setVerse(initialVerse);
 }
