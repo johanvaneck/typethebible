@@ -1,0 +1,78 @@
+body {
+  background-color: blanchedalmond;
+  background-image: url('https://images.unsplash.com/photo-1499346030926-9a72daac6c63?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8NHx8fGVufDB8fHx8&w=1000&q=80');
+  height: 100vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+#app {
+  margin: auto;
+  text-align: center;
+}
+
+#main-heading {
+  margin-top: 20vh;
+  margin-inline: 3vh;
+  padding: 1vh 5vw;
+  background-color: rgba(256, 256, 256, 0.1);
+  font-family:  Georgia, 'Times New Roman', Times, serif;
+}
+
+#display {
+  background-color: rgba(256, 256, 256, 0.2);
+  margin: 3vh;
+  padding: 1vh 5vw;
+}
+
+#display-heading{
+  font-style: italic;
+}
+
+#display-par {
+  font-size: x-large;
+  text-align: justify;
+}
+
+#input {
+  width: 50vw;
+  height: 4vh;
+  background-color: rgba(256, 256, 256, 0.3);
+  border: 1;
+  border-color: gold;
+  border-style: solid;
+  text-align: center;
+  font-size: large;
+}
+
+#input:focus{
+  outline-color: green;
+}
+
+button {
+  width: 10vw;
+  height: 3vh;
+  border: 0;
+  margin: 2vh;
+  background-color: rgba(256, 256, 256, 0.4);
+}
+
+button:hover {
+  background-color:  floralwhite;
+}
+
+#results {
+  background-color: rgba(256, 256, 256, 0.5);
+  margin: 3vh;
+  padding: 1vh;
+  font-size: large;
+}
+
+.correct{
+  color: green;
+}
+
+.wrong{
+  color: red;
+}
