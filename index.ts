@@ -1,6 +1,6 @@
 import "./style.css";
 import books from "./books";
-import { getNewVerse, type Verse } from "./verse";
+import { getNewVerse, parseVerse, type Verse } from "./verse";
 
 const displayHeadingEl = document.getElementById("display-heading");
 const displayParEl = document.getElementById("display-par");
@@ -24,7 +24,8 @@ function setVerse(verse: Verse) {
   refreshElements();
   displayHeadingEl.innerText = `${verse.book_name} ${verse.chapter}:${verse.verse}`;
   // displayParEl.innerText = verse.text;
-  containerize(verse.text).forEach((span) => {
+
+  stringToSpanArray(verse.text).forEach((span) => {
     displayParEl.appendChild(span);
   });
 }
@@ -76,7 +77,7 @@ async function setPrevVerse() {
   }
 }
 
-function containerize(input: String): HTMLSpanElement[] {
+function stringToSpanArray(input: String): HTMLSpanElement[] {
   let spans = [];
   let count = 0;
   for (let c of input) {
@@ -91,7 +92,7 @@ function containerize(input: String): HTMLSpanElement[] {
 
 function handleInput() {
   const text = inputEl.value;
-  const currentVerseText = sessionVerses[sessionVerses.length - 1].text.trim();
+  const currentVerseText = parseVerse(sessionVerses[sessionVerses.length - 1].text);
 
   for (let i = 0; i < currentVerseText.length; i++) {
     const spanEl = document.getElementById(`c-${i}`);
@@ -112,23 +113,24 @@ function handleInput() {
     startTime = new Date().getTime();
     console.log(startTime);
   }
-  if (text == currentVerseText) {
-    // stop timer
-    console.log("FINISH");
-    endTime = new Date().getTime();
-    console.log(endTime);
+  if (text == currentVerseText) verseCompleted(currentVerseText)
+}
+function verseCompleted(currentVerseText){
+  // stop timer
+  console.log("FINISH");
+  endTime = new Date().getTime();
+  console.log(endTime);
 
-    // const totalTime = (endTime - startTime) / 1000;
-    // sessionResults.push(` ${totalTime} Seconds`);
-    // document.getElementById('results-prev').innerText = `${sessionResults}`;
-    const words = currentVerseText.trim().split(/\s+/).length;
-    const minutes = (endTime - startTime) / 1000 / 60;
-    const wpm = Math.round(words / minutes);
-    const res = ` ${wpm} wpm`;
-    document.getElementById("results-latest").innerText = ` ${wpm} wpm`;
-    document.getElementById("results-prev").innerText = `${sessionResults}`;
-    sessionResults.push(res);
-  }
+  // const totalTime = (endTime - startTime) / 1000;
+  // sessionResults.push(` ${totalTime} Seconds`);
+  // document.getElementById('results-prev').innerText = `${sessionResults}`;
+  const words = currentVerseText.split(/\s+/).length;
+  const minutes = (endTime - startTime) / 1000 / 60;
+  const wpm = Math.round(words / minutes);
+  const res = ` ${wpm} wpm`;
+  document.getElementById("results-latest").innerText = ` ${wpm} wpm`;
+  document.getElementById("results-prev").innerText = `${sessionResults}`;
+  sessionResults.push(res);
 }
 
 async function main() {
