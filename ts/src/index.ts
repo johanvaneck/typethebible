@@ -115,6 +115,7 @@ function handleInput() {
   }
   if (text == currentVerseText) verseCompleted(currentVerseText)
 }
+
 function verseCompleted(currentVerseText){
   // stop timer
   console.log("FINISH");
